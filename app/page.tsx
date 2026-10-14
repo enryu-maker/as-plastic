@@ -16,6 +16,7 @@ import {
   ChevronDown,
   ShieldCheck,
   Phone,
+  Mail,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -40,7 +41,7 @@ const products = [
   },
   {
     name: 'Plastic Mould Dies',
-    image: '/assets/plastic-mould.jpg',
+    image: '/assets/cap-mould.jpg',
     label: 'APPLICATION-SPECIFIC MOULDS',
     description:
       'High-grade plastic mould tooling for caps, closures, egg trays, and custom application-specific consumer products.',
@@ -58,7 +59,7 @@ const products = [
   },
   {
     name: 'Mould Base Work',
-    image: '/assets/mould-workshop.jpg',
+    image: '/assets/mould-base-rack.jpg',
     label: 'TOOL ROOM & MOULDING JOB WORKS',
     description:
       'Custom standard and bespoke mould base manufacturing for tool room job-works. Tailored to your engineering drawings and component specifications.',
@@ -84,12 +85,82 @@ const faqs = [
     'When was A S Plastics established?',
     'A S Plastics was established in 2015 as a dedicated manufacturing and tool room proprietorship in Nashik, Maharashtra.',
   ],
+  [
+    'Do you repair and maintain existing moulds?',
+    'Yes. Alongside new tooling, A S Plastics takes up mould maintenance and repair job work, servicing existing injection moulds and dies at its tool room in Satpur MIDC, Nashik.',
+  ],
+  [
+    'How long does it take to make an injection mould?',
+    'Lead time depends on part size, cavity count and complexity. After reviewing your drawings, A S Plastics confirms the delivery schedule in writing along with the quotation.',
+  ],
+  [
+    'How much does a plastic mould cost?',
+    'Mould cost depends on part size and geometry, number of cavities, steel grade and the finish required. Share drawings or a sample and you will receive a transparent, itemised quotation.',
+  ],
+  [
+    'Do you take VMC machining and tool room job work only?',
+    'Yes. Besides complete moulds, A S Plastics takes VMC machining, mould base and tool room job work to your drawings and specifications.',
+  ],
+  [
+    'Which areas does A S Plastics serve?',
+    'A S Plastics is based in Nashik and supplies tooling to OEMs, injection moulders and packaging manufacturers across Maharashtra and India.',
+  ],
+];
+
+const processSteps = [
+  [
+    '01',
+    'Share your requirement',
+    'Tell us about your application, product drawings (2D/3D), plastic sample dimensions, and resin specifications.',
+  ],
+  [
+    '02',
+    'Discuss the details',
+    'Connect directly with our engineering team to review mold flow feasibility, cavity configuration, and delivery milestones.',
+  ],
+  [
+    '03',
+    'Get a quotation & build',
+    'Receive a transparent quotation with steel grades and delivery schedule. Fabrication begins on state-of-the-art machines.',
+  ],
+];
+
+const pageJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(([q, a]) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'How to get a mould or die made by A S Plastics',
+    step: processSteps.map(([n, name, text]) => ({ '@type': 'HowToStep', position: Number(n), name, text })),
+  },
 ];
 
 export default function HomePage() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [contactModal, setContactModal] = useState<string | null>(null);
   const [expandedProducts, setExpandedProducts] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  // Highlight the nav link for whichever section crosses the upper-middle of the viewport.
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActiveSection(e.target.id)),
+      { rootMargin: '-35% 0px -60% 0px' }
+    );
+    ['home', 'products', 'about', 'workflow', 'faqs', 'contact'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   React.useEffect(() => {
     if (mobileMenu) {
@@ -118,6 +189,7 @@ export default function HomePage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       {/* Top Banner Notice */}
       <div className="bg-hero text-hero-muted text-[11px] py-2.5 border-b border-border/20">
         <div className="site-container flex items-center justify-between gap-3">
@@ -155,18 +227,21 @@ export default function HomePage() {
           </a>
 
           <nav className="hidden md:flex items-center gap-8 text-[13px] font-semibold" aria-label="Main navigation">
-            <a href="#home" className="text-primary hover:text-primary transition-colors">
-              Home
-            </a>
-            <a href="#products" className="text-foreground hover:text-primary transition-colors">
-              Products & Services
-            </a>
-            <a href="#about" className="text-foreground hover:text-primary transition-colors">
-              About Us
-            </a>
-            <a href="#contact" className="text-foreground hover:text-primary transition-colors">
-              Contact
-            </a>
+            {[
+              ['Home', 'home'],
+              ['Products & Services', 'products'],
+              ['About Us', 'about'],
+              ['Contact', 'contact'],
+            ].map(([label, id]) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                aria-current={activeSection === id ? 'true' : undefined}
+                className={`nav-link ${activeSection === id ? 'text-primary' : 'text-foreground'} hover:text-primary transition-colors`}
+              >
+                {label}
+              </a>
+            ))}
           </nav>
 
           <div className="flex items-center gap-3">
@@ -206,7 +281,8 @@ export default function HomePage() {
               <a
                 key={href}
                 href={href}
-                className="font-medium hover:text-primary transition-colors py-1"
+                aria-current={activeSection === href.slice(1) ? 'true' : undefined}
+                className={`font-medium hover:text-primary transition-colors py-1 ${activeSection === href.slice(1) ? 'text-primary' : ''}`}
                 onClick={() => setMobileMenu(false)}
               >
                 {label}
@@ -243,13 +319,13 @@ export default function HomePage() {
                 A S Plastics · Established 2015
               </div>
               <h1 className="hero-title">
-                A S Plastics.<br />
-                Precision moulds.<br />
-                <span className="text-highlight">Big possibilities.</span>
+                Injection moulds.<br />
+                Precision dies.<br />
+                <span className="text-highlight">Made in Nashik.</span>
               </h1>
               <p className="mt-6 max-w-[460px] text-sm leading-7 text-hero-muted">
-                High-tolerance injection moulding dies, custom plastic moulds, and heavy VMC machining.
-                Engineering and manufacturing solutions from Nashik, precision-crafted to your industrial specifications.
+                A S Plastics is a tool room and mould manufacturer in Satpur MIDC, Nashik, making high-tolerance
+                injection moulding dies, custom plastic moulds and mould bases, with heavy VMC machining and mould maintenance.
               </p>
 
               <div className="flex flex-wrap gap-3 mt-8">
@@ -330,7 +406,7 @@ export default function HomePage() {
                   <div className="product-image">
                     <img
                       src={product.image}
-                      alt={`Illustrative ${product.name.toLowerCase()}`}
+                      alt={product.name}
                       loading="lazy"
                     />
                     <span className="absolute left-3 top-3 bg-background/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-bold text-muted-foreground rounded-sm border border-border">
@@ -376,6 +452,8 @@ export default function HomePage() {
               <Button
                 variant="outline"
                 onClick={() => setExpandedProducts(!expandedProducts)}
+                aria-expanded={expandedProducts}
+                aria-controls="more-products"
                 className="h-11 text-xs px-6 font-semibold"
               >
                 {expandedProducts ? 'Show Core Products' : 'View More Products & Dies'}
@@ -386,34 +464,33 @@ export default function HomePage() {
               </Button>
             </div>
 
-            {expandedProducts && (
-              <div className="mt-8 border-y border-border divide-y divide-border bg-card rounded-md border p-2">
-                {[
-                  { name: 'Die Casting Moulds', desc: 'Precision aluminum & zinc high-pressure die casting moulds' },
-                  { name: 'Kids Toys & Specialty Moulds', desc: 'Multi-cavity high-speed plastic injection dies for durable toys' },
-                  { name: 'PET Preform Mould Components', desc: 'Custom blow & injection components for beverage packaging' },
-                  { name: 'Heavy Tool Room Job Works', desc: 'Surface grinding, EDM spark erosion, and lathe job-works' },
-                ].map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-4 px-3 hover:bg-muted/40 transition-colors"
-                  >
-                    <div>
-                      <h4 className="text-sm font-bold text-foreground">{item.name}</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
-                    </div>
-                    <Button
-                      variant="brand"
-                      size="sm"
-                      onClick={() => handleEnquire(item.name)}
-                      className="text-xs font-semibold self-start sm:self-auto"
-                    >
-                      Enquire <ArrowUpRight size={13} />
-                    </Button>
+            <div id="more-products" hidden={!expandedProducts} className="mt-8 border-y border-border divide-y divide-border bg-card rounded-md border p-2">
+              {[
+                { name: 'Die Casting Moulds', desc: 'Precision aluminum & zinc high-pressure die casting moulds' },
+                { name: 'Kids Toys & Specialty Moulds', desc: 'Multi-cavity high-speed plastic injection dies for durable toys' },
+                { name: 'PET Preform Mould Components', desc: 'Custom blow & injection components for beverage packaging' },
+                { name: 'Heavy Tool Room Job Works', desc: 'Surface grinding, EDM spark erosion, and lathe job-works' },
+                { name: 'Mould Maintenance & Repair', desc: 'Servicing and repair of existing injection moulds and dies' },
+              ].map((item) => (
+                <div
+                  key={item.name}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-4 px-3 hover:bg-muted/40 transition-colors"
+                >
+                  <div>
+                    <h3 className="text-sm font-bold text-foreground">{item.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
                   </div>
-                ))}
-              </div>
-            )}
+                  <Button
+                    variant="brand"
+                    size="sm"
+                    onClick={() => handleEnquire(item.name)}
+                    className="text-xs font-semibold self-start sm:self-auto"
+                  >
+                    Enquire <ArrowUpRight size={13} />
+                  </Button>
+                </div>
+              ))}
+            </div>
 
             <p className="mt-6 text-center text-[10px] text-muted-foreground">
               Product imagery reflects workshop capabilities. Contact us with your technical drawings for customized feasibility and fabrication.
@@ -496,23 +573,7 @@ export default function HomePage() {
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 mt-12">
-              {[
-                [
-                  '01',
-                  'Share your requirement',
-                  'Tell us about your application, product drawings (2D/3D), plastic sample dimensions, and resin specifications.',
-                ],
-                [
-                  '02',
-                  'Discuss the details',
-                  'Connect directly with our engineering team to review mold flow feasibility, cavity configuration, and delivery milestones.',
-                ],
-                [
-                  '03',
-                  'Get a quotation & build',
-                  'Receive a transparent quotation with steel grades and delivery schedule. Fabrication begins on state-of-the-art machines.',
-                ],
-              ].map(([number, title, body]) => (
+              {processSteps.map(([number, title, body]) => (
                 <div key={number} className="border-t-2 border-primary/40 pt-6 bg-card p-5 rounded-md border border-border shadow-sm">
                   <span className="text-primary text-sm font-extrabold tracking-wider">{number}</span>
                   <h3 className="font-bold mt-3 text-base text-foreground">{title}</h3>
@@ -611,11 +672,31 @@ export default function HomePage() {
                 A S PLASTICS<span className="text-primary">.</span>
               </a>
               <p className="mt-2 text-xs text-muted-foreground">
-                Precision Moulds · Plastic Dies · Heavy VMC Machining
+                {brand.servicesLine}
               </p>
-              <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                <MapPin size={13} className="text-primary" /> Nashik, Maharashtra, India
+              <p className="mt-3 flex items-start gap-2 text-xs text-muted-foreground">
+                <MapPin size={13} className="text-primary mt-0.5 shrink-0" />
+                {brand.address}
               </p>
+              <p className="mt-2 flex items-start gap-2 text-xs text-muted-foreground">
+                <Phone size={13} className="text-primary mt-0.5 shrink-0" />
+                <span>
+                  Tel: <a href="tel:+912534534690" className="hover:text-primary">{brand.landline}</a> · Cell:{' '}
+                  {brand.phoneNumbers.map((number: string, i: number) => (
+                    <React.Fragment key={number}>
+                      {i > 0 && ' / '}
+                      <a href={`tel:+91${number}`} className="hover:text-primary">{number}</a>
+                    </React.Fragment>
+                  ))}
+                </span>
+              </p>
+              <p className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                <Mail size={13} className="text-primary shrink-0" />
+                <a href={`mailto:${brand.email}`} className="hover:text-primary">
+                  {brand.email}
+                </a>
+              </p>
+              <p className="mt-2 text-xs font-semibold text-foreground">GSTIN: {brand.gstin}</p>
             </div>
 
             <div className="flex gap-12 text-xs">
@@ -637,27 +718,22 @@ export default function HomePage() {
 
               <div className="flex flex-col gap-2.5">
                 <span className="font-bold text-foreground mb-1">Direct Connect</span>
-                <Button
-                  variant="link"
-                  className="justify-start h-auto p-0 text-xs font-semibold"
-                  onClick={() => handleEnquire()}
-                >
-                  WhatsApp Inquiry <ArrowUpRight size={13} />
-                </Button>
-                <Button
-                  variant="link"
-                  className="justify-start h-auto p-0 text-xs font-semibold"
-                  onClick={() => handleCallModal()}
-                >
-                  Call Technical Team <Phone size={13} />
-                </Button>
+                <button type="button" className="flex items-center gap-1.5 bg-transparent border-0 p-0 cursor-pointer text-left text-xs text-muted-foreground hover:text-primary transition-colors" onClick={() => handleEnquire()}>
+                  <MessageCircle size={13} /> WhatsApp
+                </button>
+                <button type="button" className="flex items-center gap-1.5 bg-transparent border-0 p-0 cursor-pointer text-left text-xs text-muted-foreground hover:text-primary transition-colors" onClick={() => handleCallModal()}>
+                  <Phone size={13} /> Call Us
+                </button>
+                <a href={`mailto:${brand.email}`} className="flex items-center gap-1.5 bg-transparent border-0 p-0 cursor-pointer text-left text-xs text-muted-foreground hover:text-primary transition-colors">
+                  <Mail size={13} /> Email Us
+                </a>
               </div>
             </div>
           </div>
 
           <div className="border-t border-border mt-10 pt-6 flex flex-wrap justify-between gap-3 text-[10px] text-muted-foreground">
             <span>© {new Date().getFullYear()} A S Plastics. All rights reserved.</span>
-            <span>SICOF, Satpur MIDC, Nashik, Maharashtra · Precision Plastic Engineering</span>
+            <span>Made with ❤️ by <a href="https://nerdtech.in" target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-primary transition-colors">NerdTech</a></span>
           </div>
         </div>
       </footer>

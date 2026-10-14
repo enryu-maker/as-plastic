@@ -1,13 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { brand } from '@/lib/brand';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://as-plastics.vercel.app';
+import { brand, siteUrl } from '@/lib/brand';
 
 export const metadata: Metadata = {
-  title: 'A S Plastics | Injection Mould & Plastic Die Manufacturer, Nashik',
+  title: 'A S Plastics | Injection Mould & Die Maker, Nashik',
   description:
-    'A S Plastics, Nashik: precision tool room and moulding job works, injection moulding dies, mould bases, and heavy VMC machining services. Established in 2015.',
+    'A S Plastics, Nashik: injection moulding dies, plastic moulds, mould bases, VMC machining and mould maintenance since 2015. Call or WhatsApp for a quote.',
   keywords: [
     'A S Plastics',
     'Injection moulding dies Nashik',
@@ -16,6 +14,7 @@ export const metadata: Metadata = {
     'Mould base tool room',
     'SICOF Satpur MIDC',
     'Industrial plastic dies',
+    'Mould maintenance Nashik',
   ],
   authors: [{ name: brand.owner }],
   creator: brand.name,
@@ -61,20 +60,40 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
+    '@id': `${siteUrl}/#business`,
     name: brand.name,
-    founder: brand.owner,
+    alternateName: brand.alternateNames,
+    description: brand.description,
+    url: siteUrl,
+    logo: `${siteUrl}/assets/as-plastics-logo.png`,
+    image: `${siteUrl}/opengraph-image`,
+    founder: { '@type': 'Person', name: brand.owner, jobTitle: 'Proprietor' },
     foundingDate: brand.establishedYear,
+    email: brand.email,
+    telephone: ['+91 253 4534690', ...brand.phoneNumbers.map((num: string) => `+91 ${num}`)],
+    taxID: brand.gstin,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: brand.address,
+      streetAddress: 'Plot No. 69, Gala No. 394, SICOF MIDC, Satpur',
       addressLocality: brand.city,
       addressRegion: brand.state,
       postalCode: brand.pincode,
       addressCountry: 'IN',
     },
-    telephone: brand.phoneNumbers.map((num: string) => `+91 ${num}`),
-    description: brand.description,
-    url: siteUrl,
+    areaServed: [
+      { '@type': 'City', name: 'Nashik' },
+      { '@type': 'State', name: 'Maharashtra' },
+      { '@type': 'Country', name: 'India' },
+    ],
+    knowsAbout: ['Injection moulding dies', 'Plastic moulds', 'Mould bases', 'VMC machining', 'Die casting moulds', 'Mould maintenance'],
+    makesOffer: [
+      'Injection Moulding Dies',
+      'Plastic Mould Dies',
+      'VMC Machining Work',
+      'Mould Base Work',
+      'Die Casting Moulds',
+      'Mould Maintenance & Repair',
+    ].map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
   };
 
   return (
