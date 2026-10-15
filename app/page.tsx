@@ -107,6 +107,15 @@ const faqs = [
   ],
 ];
 
+const clients = [
+  ['Rishabh', '/assets/clients/rishabh.jpeg'],
+  ['Orbital', '/assets/clients/orbital.jpeg'],
+  ['Supreme Equipments', '/assets/clients/supreme.png'],
+  ['V K Pump Industries', '/assets/clients/vk-pump.jpeg'],
+  ['Electric Switch', '/assets/clients/electric-switch.jpg'],
+  ['Positive Metering Pumps', '/assets/clients/positive.jpeg'],
+];
+
 const processSteps = [
   [
     '01',
@@ -155,7 +164,7 @@ export default function HomePage() {
       (entries) => entries.forEach((e) => e.isIntersecting && setActiveSection(e.target.id)),
       { rootMargin: '-35% 0px -60% 0px' }
     );
-    ['home', 'products', 'about', 'workflow', 'faqs', 'contact'].forEach((id) => {
+    ['home', 'products', 'about', 'clients', 'workflow', 'faqs', 'contact'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -231,6 +240,7 @@ export default function HomePage() {
               ['Home', 'home'],
               ['Products & Services', 'products'],
               ['About Us', 'about'],
+              ['Clients', 'clients'],
               ['Contact', 'contact'],
             ].map(([label, id]) => (
               <a
@@ -274,6 +284,7 @@ export default function HomePage() {
               ['Home', '#home'],
               ['Products & Services', '#products'],
               ['About Us', '#about'],
+              ['Our Clients', '#clients'],
               ['Manufacturing Process', '#workflow'],
               ['FAQs', '#faqs'],
               ['Contact Details', '#contact'],
@@ -557,6 +568,23 @@ export default function HomePage() {
                   <Phone size={14} /> Contact Team
                 </Button>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* CLIENTS */}
+        {/* ========================================================= */}
+        <section id="clients" className="py-16 border-b border-border">
+          <div className="site-container">
+            <div className="eyebrow text-primary mb-3">Trusted by</div>
+            <h2 className="section-title">Our clients.</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mt-10">
+              {clients.map(([name, src]) => (
+                <div key={name} className="flex items-center justify-center bg-white rounded-md border border-border p-4 h-28">
+                  <img src={src} alt={`${name} logo`} loading="lazy" className="max-h-full max-w-full object-contain" />
+                </div>
+              ))}
             </div>
           </div>
         </section>
