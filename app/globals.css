@@ -55,11 +55,15 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 90px;
+  scroll-padding-top: 100px;
   font-family: var(--font-sans);
   background-color: var(--background);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
+}
+
+section[id] {
+  scroll-margin-top: 100px;
 }
 
 body {
@@ -704,6 +708,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .site-header {
+    height: 72px;
+  }
   .hero-scene {
     height: auto;
     min-height: 520px;

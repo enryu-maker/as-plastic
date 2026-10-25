@@ -213,7 +213,7 @@ export default function HomePage() {
 
       {/* Main Sticky Header */}
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border">
-        <div className="site-container flex h-[84px] items-center justify-between gap-5">
+        <div className="site-container site-header flex h-[84px] items-center justify-between gap-5">
           <a href="#home" className="flex items-center gap-3" aria-label="A S Plastics home">
             <div className="relative h-12 w-12 flex-shrink-0">
               <Image
