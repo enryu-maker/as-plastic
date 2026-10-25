@@ -579,10 +579,10 @@ export default function HomePage() {
           <div className="site-container">
             <div className="eyebrow text-primary mb-3">Trusted by</div>
             <h2 className="section-title">Our clients.</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mt-10">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-8 sm:mt-10">
               {clients.map(([name, src]) => (
-                <div key={name} className="flex items-center justify-center bg-white rounded-md border border-border p-4 h-28">
-                  <img src={src} alt={`${name} logo`} loading="lazy" className="max-h-full max-w-full object-contain" />
+                <div key={name} className="client-logo-card">
+                  <img src={src} alt={`${name} logo`} loading="lazy" className="client-logo-img" />
                 </div>
               ))}
             </div>
