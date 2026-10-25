@@ -544,7 +544,7 @@ export default function HomePage() {
                 OEMs, injection moulders, and packaging manufacturers across Maharashtra and India.
               </p>
 
-              <div className="grid grid-cols-2 gap-4 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-6">
                 {[
                   'Injection mould tooling',
                   'Plastic mould dies',
@@ -560,7 +560,7 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <div className="mt-8 flex items-center gap-4">
+              <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
                 <Button variant="brand" className="h-11 px-6 text-xs font-semibold" onClick={() => handleEnquire('General Inquiry')}>
                   Partner With Us <ArrowUpRight size={14} />
                 </Button>
@@ -727,7 +727,7 @@ export default function HomePage() {
               <p className="mt-2 text-xs font-semibold text-foreground">GSTIN: {brand.gstin}</p>
             </div>
 
-            <div className="flex gap-12 text-xs">
+            <div className="flex flex-wrap gap-8 sm:gap-12 text-xs">
               <div className="flex flex-col gap-2.5">
                 <span className="font-bold text-foreground mb-1">Navigation</span>
                 <a href="#products" className="text-muted-foreground hover:text-primary transition-colors">
